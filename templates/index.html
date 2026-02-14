@@ -16,27 +16,58 @@
                 </h1>
                 <p class="text-gray-600">Organize suas tarefas de forma eficiente</p>
             </div>
-            
+
+            <div class="gb-white rounded-lg shadow-lg p-6 mb-8">
+
+                <h2 class="text-2x1 font-semibold text-gray-700 mb-4">
+                    Adicione uma nova tarefa
+                </h2>
+                <!-- fazendo a conexão do flask com a rota /create-->
+                <form action="/create" method="post" class="flex gap-3">
+                    <input type="text" name="description" required placeholder="Digite a descrição da tarefa" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-transparent">
+                    <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-200 shadow-md hover:shadow-lg">
+                        Criar
+                    </button>
+                </form>
+            </div> 
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2x1 font-semibold text-gray-700 mb-6">
+                    Suas Tarefas
+                </h2>
+
+                {% if tasks %}
+                    <ul class="space-y-3">
+
+                        {% for task in tasks%}
+                            <li class="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-200">
+
+                                <div class="flex items-center gap-3">
+                                    <form action="/update/{{ task.id }}" method="post" class="flex-1 flex gap-2 ">
+                                        <input type="text" name="description" value="{{ task.description }} " class="flex-1 px-3 py-2 border border-gray-300 rounded-mg focus:ouline-none focus:ring-green-500">
+                                        <button type="submit" class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition duration-200">
+                                            Atualizar
+                                        </button>
+                                    </form>
+
+                                    <form action="/delete/{{ task.id }}" method="post">
+                                        <button type="submit" class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-mg hover:bg-red-700 transition duration-200" onclick="return confirm('Tem certeza que deseja remover essa tarefa?')">
+                                            Excluir
+                                        </button>
+                                    </form>
+                                </div>
+                            </li> 
+                        {% endfor %}
+                    </ul>
+                {%else%}
+                    <p class="text-center text-gray-500 text-sm">
+                        Nenhuma tarefa cadastrada.Adicione uma!
+                    </p>
+                {%endif%}
+            </div>
+
+            <div class="text-center mt-8 text-gray-600 text-sm">
+                Feito com Flask + Tailwind css
+            </div>
         </div>
-        <h1>Adicionar nova tarefa</h1>
-        <form action="/create" method="post">
-            <input type="text" name="description" required>
-            <button type="submit">Criar tarefa</button>
-        </form>
-        <h1>Estudando Flask</h1>
-        <ul>
-           {% for task in tasks %}
-                <li>
-                    {{ task.description }}
-                    <form action="/update/{{ task.id}}" method="post" style="display: inline;">
-                        <input type="text" name="description" value="{{ task.description }}">
-                        <button type="submit">Atualizar</button>
-                    </form>
-                    <form action="/delete/{{ task.id }}" method="post" style="display: inline;">
-                        <button type="submit">Excluir</button>
-                    </form>
-                </li>
-           {% endfor %} 
-        </ul>
     </body>
 </html>
