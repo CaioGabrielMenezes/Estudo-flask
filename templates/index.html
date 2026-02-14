@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Testando</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <title>Gerenciador de tarefas</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>
+    <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
+        <div class="max-w-4x1 mx-auto px-4">
+            <!--Cabeçalho-->
+            <div class="text-center mb-8">
+                <h1 class="text-4x1 font-bold text-gray-800 mb-2">
+                    Gerenciador de Tarefas
+                </h1>
+                <p class="text-gray-600">Organize suas tarefas de forma eficiente</p>
+            </div>
+            
+        </div>
         <h1>Adicionar nova tarefa</h1>
         <form action="/create" method="post">
             <input type="text" name="description" required>
