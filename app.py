@@ -7,7 +7,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave-padrao')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'minha-super-chave-secreta-para-testes-12345678990')
 db = SQLAlchemy(app)
 
 #Definindo modelo de banco de dados
@@ -29,12 +29,15 @@ def create_task():
     #Validando arquivos duplicados
     existind_task = Tasks.query.filter_by(description=description).first()
     if existind_task:
-        return 'Error: Tarefa já existe', 400
+        flash('Error: Tarefa já existe!', 'error')
+        print("FLASH ENVIADO: Erro - Tarefa duplicada")
+        return redirect('/')
     
 
     new_task = Tasks(description = description)
     db.session.add(new_task)
     db.session.commit()
+    flash('Tarefa adicionada com sucesso!', 'success')
     return redirect('/')
 
 #cruD
@@ -45,6 +48,9 @@ def delete_task(task_id):
     if task:
         db.session.delete(task)
         db.session.commit()
+        flash('Tarefa removida', 'success')
+    else:
+        flash('Tarefa não encontrada', 'error')
     return redirect('/')
 
 #crUd
@@ -52,11 +58,23 @@ def delete_task(task_id):
 def update_task(task_id):
     task = Tasks.query.get(task_id) #instância do db
 
-    if task: #se existir captura as informações do formulário html de description
-        task.description = request.form['description']
-        db.session.commit() #commit no banco
-    return redirect('/') #redireciona para a rota principal
+    if task:
+        new_description = request.form['description'] #se existir captura as informações do formulário html de description
+        existing_task = Tasks.query.filter_by(description=new_description).first()
+        if existing_task and existing_task.id != task_id:
+            flash('Erro! Ja existe essa tarefa', 'error')
+            return redirect('/') #redireciona para a rota principal
+        task.description = new_description
+        db.session.commit()
+        flash('Tarefa atualizada!', 'success')
+    else:
+        flash('Tarefa não Encontrada!', 'error')
+    return redirect('/')
 
+@app.route('/teste-flash')
+def teste_flash():
+    flash('Mensagem de teste! Se você vê isso, o flash funciona!', 'success')
+    return redirect('/')
 
 
 if __name__ == '__main__':
